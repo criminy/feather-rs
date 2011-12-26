@@ -1,0 +1,49 @@
+# Happy Holidays and Merry Christmas! #
+
+2011-12-26 
+
+This is a simple developer log, just to capture quick thoughts about the project as they develop.
+It's mostly for me to document and organize my thoughts as I work through decisions and problems
+while building this library.
+
+Inspiration for feather-rs came from the article about JAX-RS being the 'one true Java web framework to
+rule them all':
+
+    http://www.theserverside.com/blogs/thread.tss?thread_id=53465
+
+    http://macstrac.blogspot.com/2009/01/jax-rs-as-one-web-framework-to-rule.html
+
+I like the idea of JAX-RS, because I found it to be very simple but powerful. With my 
+initial research, I was able to get a modular system worked together, where pre-built 
+JAX-RS endpoints can be created, then extended with @Path to give them
+root endpoints. All of a sudden you have a re-usable module system akin to django. New
+configuration or classes can be provided with @Providers or config files within the classpath.
+
+The article talks about JSP implicit views. In my opinion, I find new frameworks need to avoid JSP.
+Sadly, they can't use JSF and JAX-RS endpoints (easily, or at all). This is why I am looking at a 
+jsoup based view technology, where you can bind values to elements within Java code. I especially
+like the idea of a view technology which keeps your HTML code 'pure' (free from java, JSP, or JSF specific
+markup).
+
+I've already got a demo working under a different name, and now I start the task
+of merging it into this github repository and getting all the namings to 'feather-rs'
+
+## Why feather-rs name ##
+
+Well I wanted the name 'rs' to signify that this is a JAX-RS based project. Why feather, then?
+feathers are light, need, and well...I needed name.
+
+## Lets talk about build systems ##
+
+I've been a maven person for quite awhile. This is coming from projects which had NO dependency
+management and, when finding maven, just fell in love. However, I do enjoy gradle as well.
+
+Not 100% sure which one to use at this point. My gut says maven, as I have a bit more explicit control
+and a larger skeleton to work from. Eventually I will create a branch of a 'gradle only' build, but
+until then I'll use maven.
+
+## Time to commit ##
+
+Alright, I've got a standard "core" system implemented and a hello world application working. Next
+steps are to create the standard authentication module, the default implementation, and add
+the 'helloworld-secure' example.
