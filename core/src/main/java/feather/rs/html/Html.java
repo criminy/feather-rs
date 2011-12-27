@@ -2,6 +2,8 @@ package feather.rs.html;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,6 +11,8 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import feather.rs.View;
 
 /**
  * Primary class for end-developers to interact with the 
@@ -25,6 +29,67 @@ public class Html {
 
 	public Document getDocument() {
 		return document;
+	}
+	
+	protected String convertProtocol(String proto){
+		if(proto.toLowerCase().contains("https"))
+		{
+			return "https";		
+		}else{
+			return "http";
+		}
+	}
+	
+	public void updateLinks(HttpServletRequest req){
+		Elements ex = document.select("a");
+		Elements ex2 = document.select("link");
+		for(Element e : ex)
+		{
+			updateLink(req, e);
+		}
+		for(Element e : ex2)
+		{
+			updateLink(req, e);
+		}
+	}
+	
+	protected void updateLink(HttpServletRequest req, Element e)
+	{
+		if(e.attr("href").startsWith("/"))
+		{
+			//is a relative URL
+			
+			if( (req.getServerPort() == 80 && req.getProtocol().matches("HTTP/.*")) || 
+				(req.getServerPort() == 443 && req.getProtocol().matches("HTTPS/.*")))
+			{					
+				e.attr("href", 
+						String.format("%s://%s%s%s",
+								convertProtocol(req.getProtocol()),
+								req.getServerName(),
+								req.getContextPath(),
+								e.attr("href")));
+			}else{
+				e.attr("href", 
+						String.format("%s://%s:%s%s%s",
+								convertProtocol(req.getProtocol()),
+								req.getServerName(),
+								Integer.toString(req.getServerPort()),
+								req.getContextPath(),
+								e.attr("href")));
+			}
+		}	
+	}
+	
+	public void renderTo(String cssSelector, View view) throws Exception
+	{
+		Html newHtml = new Html();
+		view.render(newHtml);
+		Elements ex = document.select(cssSelector);
+	
+		for (Element e : ex) {
+			e.empty();
+			e.append(newHtml.document.html());
+		}
 	}
 	
 	/**

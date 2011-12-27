@@ -5,8 +5,10 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
@@ -32,6 +34,8 @@ public class ViewProvider implements MessageBodyWriter<View>{
 
 	Logger log = LoggerFactory.getLogger(ViewProvider.class);
 	
+	@Context HttpServletRequest request;
+	
 	@Override
 	public long getSize(View arg0, Class<?> arg1, Type arg2, Annotation[] arg3,
 			MediaType arg4) {
@@ -52,11 +56,16 @@ public class ViewProvider implements MessageBodyWriter<View>{
 			OutputStream arg6) throws IOException, WebApplicationException {
 		
 		Html html = new Html();
+		
+		
 		try {
 			arg0.render(html);
 		} catch (Exception e) {
 			throw new IOException(e);
 		}
+		
+		html.updateLinks(request);
+		
 		
 		arg6.write(html.getDocument().html().getBytes());
 		arg6.flush();

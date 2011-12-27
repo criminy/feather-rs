@@ -15,7 +15,9 @@
 
 	<modules>
 		<module>core</module>
+		
 		<module>examples/helloworld</module>
+		<module>examples/templating</module>
 	</modules>
 
 	<developers>

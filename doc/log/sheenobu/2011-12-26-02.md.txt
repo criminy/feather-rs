@@ -1,0 +1,25 @@
+2011-12-26
+
+I've decided to try to implement a complex templating example, to show how you can
+get tiles-like templating within feather-rs. I realized I'm /missing/ a few features, notably
+the ability to easily mount a classpath resource to a node. I want to store my 
+css or images within src/main/java or src/main/resources and be able to expose those through
+JAX-RS. That will really help with the portable, re-usable, and theme complete web modules.
+
+Until then, I can mount css and images using simple @Path within the View implementations. Eventually
+the implementation could go:
+    
+    Individual modules expose @Provider while implementing a Media interface. Then the 
+    media will be hosted on http://ip:port/media/name-of-module/
+
+    the root media handler will be served by a class within feather.rs.media inside of feather core
+
+Yay! took around hour but I got the additional templating functionality working.
+
+I also added a very interesting method, which when given a url of the
+form "/whatever" and the HTTP servlet request, it will build the exposed
+external view using the context path. Absolute URLS beginning with protocols and
+relative URLS are skipped from this process.
+
+TODO: We need some way to mark an A, link, or script html tag to ignore this processing AND the abnility to 
+turn this option on and off at will.  
