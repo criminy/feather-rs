@@ -1,0 +1,60 @@
+2011-12-29
+
+I'm taking a very early pro-active stance on logging, which means
+I'm implementing a custom logging API before I even
+try to see if my system can work across multiple apis.
+
+What I will most likely do is provide a custom logging API
+solely for module authors, because the last thing I want to do
+is get stuck on a specific API version of log4j or slf4j and make
+my system incompatible with other libraries which ALSO use slf4j.
+
+This is my general fear. They may be unfounded.
+It comes from trying to integrate  two disparate systems together
+and getting logging API issues.
+
+What is the closest on my mind is integrating Jboss AS7 with
+tomcat-memcached-manager, but that's a different project
+and story. 
+
+What I'll do is freeze the logging API for 1.0, 2.0, etc. Luckily
+this will only apply to module authors, and hopefully
+modules won't require a specific logging version:
+
+	moduleC depends on hibernate
+	hibernate depends on slf4j API version A
+	so we must use log-impl-slf4j-version-b no matter what.
+	but that is up to each module creator. gosh I hate logging.
+
+So my module system will work like this:
+
+	moduleA depends on log-api
+	moduleB depends on log-api
+	hibernate depends on slf4j API Version B
+	custom-web-app dependency tree:
+		hibernate
+			slf4j-api-version-b
+		moduleA
+			log-api
+		moduleB
+			log-api
+		log-impl-slf4j-api-version-b
+			log-api
+		sfl4j-api-version-b-log4j12-impl
+			log4j12
+
+	custom-web-app packages:
+		my.package.resources
+		feather.rs.logging
+		
+	moduleA/moduleB code:
+		feather.rs.logging.Log log = Log.getLogger(ClassName);
+
+	custom-web-app code:
+		whatever logging API I want, providing it is compatible
+		with the version of SLF4J I chose
+
+
+So I've created a skeleton module directory and kinda fleshed out 
+my thoughts on modules (specifically the logging module).
+
