@@ -1,17 +1,15 @@
 package feather.rs.example.templating.web;
 
-import java.io.InputStream;
-
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 
 import feather.rs.View;
 import feather.rs.example.templating.web.views.HomePageView;
 import feather.rs.example.templating.web.views.PrimaryView;
 import feather.rs.html.Html;
 
+@Named
 @Path("/")
 public class Blog {
 
@@ -32,20 +30,5 @@ public class Blog {
 			}
 		});
 	}
-	
-	//TODO: move this into static media subsystem
-	@Path("/style.css")
-	@Produces("text/css")
-	@GET
-	public InputStream styleCss() {
-		return PrimaryView.class.getClassLoader().getResourceAsStream("/theme/style.css");
-	}
 
-	//TODO: move this into static media subsystem
-	@Path("/images/{imageName}") 
-	@Produces("media/jpeg")
-	@GET
-	public InputStream img(@PathParam("imageName") String imgName) {
-		return PrimaryView.class.getClassLoader().getResourceAsStream("/theme/images/" + imgName);
-	}	
 }

@@ -15,8 +15,8 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>${project.groupId}.core</artifactId>
+			<groupId>feather.rs</groupId>
+			<artifactId>feather.rs.core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

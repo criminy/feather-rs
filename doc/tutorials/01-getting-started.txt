@@ -1,0 +1,51 @@
+# feather-rs getting started #
+
+To begin, some explanatations are in order. feather-rs
+is a modular system which uses three APIs in the core library, 
+feather.rs.log, JSR-311/JAX-RS, and JSR-330/@Inject, which have
+many implementations . So to start using feather-rs, 
+we must choose implementations of all of these libraries.
+
+## feather.rs.log ##
+
+There is no logging JSR being used within feather-rs, just modules 
+which implement the logging code. This is so that
+additional modules of feather.rs have a logging API to use
+that does not require a specific version of any logging implementation or API.
+
+The following modules are available: 
+
+	* log-simple - simple logging using System.out (used in examples)
+	* log-slf4j15 - logging using slf4j-api version 1.5.X (preferred unless slf4j16 is required)
+	* log-slf4j16 - logging using slf4j-api version 1.6.X (preferred unless slf4j15 is required) (TODO: implement)
+	* log-log4j - logging using log4j (TODO: to implement)
+	* log-jcl - logging using java commons logging (TODO: to implement)
+
+## JSR-330 ## 
+
+To use a JSR-330, simply follow the instructions for your preferred JSR-330
+implementation. The following libraries are JSR-330 implementations:
+
+	* Apache OpenWebBeans
+	* JBoss Weld
+	* Resin CanDI
+	* Spring 3.0 (preferred, used in examples)
+	* Google Guice
+		
+Which implementation you use for DI can change your JAX-RS choice,
+especially outside of the JEE container. 
+
+## JSR-311 ##
+
+To use a JSR-311 implementation, simply follow the instructions for your preferred 
+JSR-311 implementation. Also, you must verify that your JSR-311 implementation
+can work with the chosen JSR-330 implementation. The following libraries
+are JSR-311 implementations: 
+
+	* Jersey (preferred, used in examples)
+	* RESTEasy
+	* Apache CXF
+	* Restlet
+
+
+ 

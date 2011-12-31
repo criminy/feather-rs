@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
@@ -14,11 +15,10 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import feather.rs.View;
 import feather.rs.html.Html;
+import feather.rs.log.Log;
+import feather.rs.log.LogFactory;
 
 
 /**
@@ -28,11 +28,12 @@ import feather.rs.html.Html;
  * @author sheenobu
  *
  */
+@Named
 @Provider
 @Produces("text/html")
 public class ViewProvider implements MessageBodyWriter<View>{
-
-	Logger log = LoggerFactory.getLogger(ViewProvider.class);
+	
+	Log log = LogFactory.getLog(ViewProvider.class);
 	
 	@Context HttpServletRequest request;
 	
@@ -45,9 +46,12 @@ public class ViewProvider implements MessageBodyWriter<View>{
 
 	@Override
 	public boolean isWriteable(Class<?> arg0, Type arg1, Annotation[] arg2,
-			MediaType arg3) {		
-		log.info(arg0.getCanonicalName());
-		return true;
+			MediaType arg3) {				
+		if(View.class.isAssignableFrom(arg0))
+			return true;
+		else
+			return false;
+			
 	}
 
 	@Override

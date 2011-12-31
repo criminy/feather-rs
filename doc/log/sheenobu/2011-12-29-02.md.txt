@@ -1,0 +1,33 @@
+2011-12-29
+
+Well. Logging and dependency injection are becoming very difficult.
+Looks like I'll HAVE to implement a custom logging facade, as the core
+system can't depend on a specific logging system without having that
+cascade all the way down. 
+
+As far as dependency injection, I am trying to build the media module.
+Applications or other modules should be able to define a 
+'MediaFolder', which gives the media module 'MediaResource':
+    
+    * The external URL
+    * A way to look up the requested media files.
+
+Looks like for multiple MediaFolders to be injected into the MediaResource, both
+need to be managed beans of some sort. I /know/ spring, but I'm looking more toward
+JSR 299 as it is the 'standard'. My issue right now is getting Weld working in
+tomcat and jetty as easily as it would work in a full-fleged EE container. 
+
+There is also the simple JSR-330/@Inject which IS supported in spring, guice as well as 
+an EE container, which means it will work across platforms pretty easily.
+
+Actually now that I look at how 'openwebbeans' explains JSR-299, it is specifically
+for EJB and JSF managed bean facalities. That doesn't help much in JAX-RS, so it
+looks like I'll go JSR-330 .
+
+Note: This is all for internal and module development. External applications using feather-rs
+/should/ be free to use any JSR-330 and JSR-299 implementations. Making sure
+feather-rs modules can bootstrap in whichever is used is exactly why I'm careful about which
+annotations are being used for dependency injection!
+
+I also discovered Kauri today. Looks interesting. http://docs.outerthought.org/kauri/about.html
+Not yet sure how much feather-rs differs, in scope or direction, but it's an interesting project.

@@ -18,15 +18,12 @@ public class PrimaryView implements View{
 	
 	@Override
 	public void render(Html html) throws Exception {
-		html.load(PrimaryView.class.getClassLoader().getResourceAsStream("/theme/index.html"));
+		html.load(PrimaryView.class.getClassLoader().getResourceAsStream("/feather.rs.examples.templating.theme/index.html"));
 		html.renderTo("#content",content);
 		html.renderTo("#sidebar",sidebar);
-				
-		
 	}
 		
 }
-
 
 class SidebarView implements View
 {

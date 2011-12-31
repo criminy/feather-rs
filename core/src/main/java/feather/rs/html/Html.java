@@ -9,10 +9,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import feather.rs.View;
+import feather.rs.log.Log;
+import feather.rs.log.LogFactory;
 
 /**
  * Primary class for end-developers to interact with the 
@@ -25,7 +25,7 @@ public class Html {
 
 	Document document;
 
-	Logger log = LoggerFactory.getLogger(Html.class);
+	Log log = LogFactory.getLog(Html.class);
 
 	public Document getDocument() {
 		return document;

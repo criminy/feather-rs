@@ -1,5 +1,6 @@
 package feather.rs.example.templating.web.views;
 
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
@@ -12,6 +13,7 @@ import feather.rs.html.Html;
  * @author sheenobu
  *
  */
+@Named
 @Path("/404")
 public class NotFoundView implements View{
 
