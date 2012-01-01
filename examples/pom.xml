@@ -8,13 +8,13 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>feather.rs.modules</artifactId>
+	<artifactId>feather.rs.examples</artifactId>
 	<packaging>pom</packaging>
-	<name>feather.rs.modules</name>
+	<name>feather.rs.examples</name>
 
 	<modules>
-		<module>media</module>
-		<module>log</module>
-		<module>auth</module>
+		<module>helloworld</module>
+		<module>secured</module>
+		<module>templating</module>
 	</modules>
 </project>

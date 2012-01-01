@@ -8,13 +8,12 @@
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>feather.rs.modules</artifactId>
+	<artifactId>feather.rs.modules.auth</artifactId>
 	<packaging>pom</packaging>
-	<name>feather.rs.modules</name>
+	<name>feather.rs.modules.auth</name>
 
 	<modules>
-		<module>media</module>
-		<module>log</module>
-		<module>auth</module>
+		<module>auth-api</module>
+		<module>auth-shiro11</module>		
 	</modules>
 </project>

@@ -1,20 +1,23 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<parent>
 		<groupId>feather.rs</groupId>
 		<artifactId>feather.rs.parent</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>feather.rs.modules</artifactId>
-	<packaging>pom</packaging>
-	<name>feather.rs.modules</name>
+	<artifactId>feather.rs.modules.auth.api</artifactId>
+	<packaging>jar</packaging>
+	<name>feather.rs.modules.auth.api</name>
 
-	<modules>
-		<module>media</module>
-		<module>log</module>
-		<module>auth</module>
-	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>feather.rs</groupId>
+			<artifactId>feather.rs.core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
 </project>

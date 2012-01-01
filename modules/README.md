@@ -5,28 +5,37 @@ feather-rs. Examples include:
 
 	media - provides media exportation functionality
 	auth - provides authentication functionality
+    log - provides logging functionality for the core feather-rs system and module authors.
 
 The list goes on (or will go on) .
 
 This module directory is specifically for official feather-rs modules, but
 modules do not specifically have to be placed in here to be used with feather-rs.
 
-Modules are maven projects which export some API and (optionally) some @Provider 
-class.
+Modules are maven projects which export some API and optionally some @Named classes.
 
-Modules are included and used within a web project differently, depending on the JAX-RS implementation.
+Modules are included and used within a web project differently, depending on the @Inject and JAX-RS implementations.
 
-For example, to include a module package directory that contains @Provider in Jersey, you
-must update your init-param that specifies packages (TODO: list name of init-param) inside
-of web.xml .
+For example, with Jersey and Spring 3, to include the shiro11 security module
+ (which contains @Named services):
 
-## logging ##
+    <context:component-scan base-package="feather.rs.auth.shiro11">
 
-Modules which require logging MUST use the same slf4j-api that the core library
-uses.
+And to include the standard pages for /login, /logout, /accessDenied, which
+includes @Named @Path resources:
+    
+    <context:component-scan base-package="feather.rs.auth.resources"/>
 
-TODO: in the future, there might be a logging module which provides a feather-rs
-specific logging API that works with different slf4j apis AND other logging
-facilities like log4j/commons-logging/etc. This will allow fluid
-logging control.
+To include the default /media handler, you include:
+
+    <context:component-scan base-package="feather.rs.media.resources"/>
+
+The pattern/convention here is that anything within a "resources"
+is a JAX-RS resource annotated with @Path. Anything outside of the
+"resources" package is a simple @Named resource. However, if 
+a package "feather.rs.auth.shiro11" contains an @Named, there would
+never be a "feather.rs.auth.shiro11.resources" . That way
+there is no surprising behavior when applying component scanning.
+
+Most likely, any resources for 'shiro11' would go under 'feather.rs.auth.resources.shiro11' .
 

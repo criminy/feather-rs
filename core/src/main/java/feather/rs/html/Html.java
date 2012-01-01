@@ -43,6 +43,7 @@ public class Html {
 	public void updateLinks(HttpServletRequest req){
 		Elements ex = document.select("a");
 		Elements ex2 = document.select("link");
+		Elements ex3 = document.select("form");
 		for(Element e : ex)
 		{
 			updateLink(req, e);
@@ -51,14 +52,17 @@ public class Html {
 		{
 			updateLink(req, e);
 		}
+		for(Element e : ex3)
+		{
+			updateLink(req, e);
+		}
 	}
 	
 	protected void updateLink(HttpServletRequest req, Element e)
 	{
-		if(e.attr("href").startsWith("/"))
+		if((e.tagName().equalsIgnoreCase("a") || e.tagName().equalsIgnoreCase("link")) && 
+			e.attr("href").startsWith("/"))
 		{
-			//is a relative URL
-			
 			if( (req.getServerPort() == 80 && req.getProtocol().matches("HTTP/.*")) || 
 				(req.getServerPort() == 443 && req.getProtocol().matches("HTTPS/.*")))
 			{					
@@ -77,7 +81,27 @@ public class Html {
 								req.getContextPath(),
 								e.attr("href")));
 			}
-		}	
+		}else if(e.tagName().equalsIgnoreCase("form") && e.attr("action").startsWith("/"))  {
+			if( (req.getServerPort() == 80 && req.getProtocol().matches("HTTP/.*")) || 
+					(req.getServerPort() == 443 && req.getProtocol().matches("HTTPS/.*")))
+				{					
+					e.attr("action", 
+							String.format("%s://%s%s%s",
+									convertProtocol(req.getProtocol()),
+									req.getServerName(),
+									req.getContextPath(),
+									e.attr("action")));
+				}else{
+					e.attr("action", 
+							String.format("%s://%s:%s%s%s",
+									convertProtocol(req.getProtocol()),
+									req.getServerName(),
+									Integer.toString(req.getServerPort()),
+									req.getContextPath(),
+									e.attr("action")));
+				}
+			
+		}
 	}
 	
 	public void renderTo(String cssSelector, View view) throws Exception
@@ -111,6 +135,14 @@ public class Html {
 		Elements ex = document.select(cssSelector);
 		for (Element e : ex) {
 			e.text(content);
+		}
+	}
+	
+
+	public void bindAttr(String cssSelector, String attrName,String attrVal) {
+		Elements ex = document.select(cssSelector);
+		for (Element e : ex) {
+			e.attr(attrName, attrVal);
 		}
 	}
 
