@@ -11,6 +11,8 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 
 import feather.rs.View;
+import feather.rs.forms.Form;
+import feather.rs.forms.FormBuilder;
 import feather.rs.log.Log;
 import feather.rs.log.LogFactory;
 
@@ -26,7 +28,12 @@ public class Html {
 	Document document;
 
 	Log log = LogFactory.getLog(Html.class);
-
+	FormBuilder formBuilder;
+	
+	public void setFormBuilder(FormBuilder formBuilder) {
+		this.formBuilder = formBuilder;
+	}
+	
 	public Document getDocument() {
 		return document;
 	}
@@ -38,6 +45,11 @@ public class Html {
 		}else{
 			return "http";
 		}
+	}
+	 
+	public  <T>  void form(String cssSelector,Form<T> form)
+	{
+		formBuilder.renderFormUsingP(this,cssSelector,form);
 	}
 	
 	public void updateLinks(HttpServletRequest req){
@@ -137,6 +149,15 @@ public class Html {
 			e.text(content);
 		}
 	}
+	
+	public void html(String cssSelector, String content) {
+		Elements ex = document.select(cssSelector);
+		for (Element e : ex) {
+			e.empty();
+			e.append(content);
+		}
+	}
+	
 	
 
 	public void bindAttr(String cssSelector, String attrName,String attrVal) {

@@ -8,8 +8,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.SecurityContext;
 
-import org.apache.shiro.SecurityUtils;
-
 import feather.rs.View;
 import feather.rs.html.Html;
 
@@ -19,6 +17,7 @@ import feather.rs.html.Html;
  * @author sheenobu
  *
  */
+
 @Named
 @Path("/")
 public class Application {
@@ -38,6 +37,7 @@ public class Application {
 	 * @param context The SecurityContext
 	 * @return The view object
 	 */
+	
 	@GET
 	@Path("/secured")
 	public View getSecuredPage(@Context SecurityContext context) {

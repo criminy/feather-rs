@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Produces;
@@ -16,6 +17,7 @@ import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
 
 import feather.rs.View;
+import feather.rs.forms.FormBuilder;
 import feather.rs.html.Html;
 import feather.rs.log.Log;
 import feather.rs.log.LogFactory;
@@ -36,6 +38,9 @@ public class ViewProvider implements MessageBodyWriter<View>{
 	Log log = LogFactory.getLog(ViewProvider.class);
 	
 	@Context HttpServletRequest request;
+	
+	@Inject
+	FormBuilder formBuilder;
 	
 	@Override
 	public long getSize(View arg0, Class<?> arg1, Type arg2, Annotation[] arg3,
@@ -60,7 +65,7 @@ public class ViewProvider implements MessageBodyWriter<View>{
 			OutputStream arg6) throws IOException, WebApplicationException {
 		
 		Html html = new Html();
-		
+		html.setFormBuilder(formBuilder);
 		
 		try {
 			arg0.render(html);
