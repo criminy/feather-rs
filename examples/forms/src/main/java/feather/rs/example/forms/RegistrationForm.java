@@ -2,6 +2,9 @@ package feather.rs.example.forms;
 
 import javax.validation.constraints.*;
 
+/**
+ * A registration form object.
+ */
 public class RegistrationForm {
 	
 	@NotNull

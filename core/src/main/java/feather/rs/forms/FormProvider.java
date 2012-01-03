@@ -75,9 +75,11 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 				return new Form<T>(o,false);
 			}
 			
-	        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-	        Validator validator;
-	        validator = factory.getValidator();
+			//TODO: inject ValidatorFactory using a @Named @Provider ContextProvider<ValidatorFactory>
+			// and insure it is a singleton.
+		        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		        Validator validator;
+	        	validator = factory.getValidator();
 			
 					
 			String x = IOUtils.toString(entityStream);

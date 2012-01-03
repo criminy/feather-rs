@@ -1,10 +1,10 @@
 # feather-rs getting started #
 
 To begin, some explanatations are in order. feather-rs
-is a modular system which uses three APIs in the core library, 
-feather.rs.log, JSR-311/JAX-RS, and JSR-330/@Inject, which have
-many implementations . So to start using feather-rs, 
-we must choose implementations of all of these libraries.
+is a modular system which uses four APIs in the core library, 
+feather.rs.log, JSR-303/javax.validation, JSR-311/JAX-RS, 
+and JSR-330/@Inject, which have many implementations . 
+So to start using feather-rs, we must choose implementations of all of these libraries.
 
 ## feather.rs.log ##
 
@@ -33,7 +33,7 @@ implementation. The following libraries are JSR-330 implementations:
 	* Google Guice
 		
 Which implementation you use for DI can change your JAX-RS choice,
-especially outside of the JEE container. 
+especially outside of a JEE container. 
 
 ## JSR-311 ##
 
@@ -42,10 +42,32 @@ JSR-311 implementation. Also, you must verify that your JSR-311 implementation
 can work with the chosen JSR-330 implementation. The following libraries
 are JSR-311 implementations: 
 
-	* Jersey (preferred, used in examples)
+	* Jersey (preferred, used in examples alongside Spring)
 	* RESTEasy
 	* Apache CXF
 	* Restlet
 
+## JSR-303 ##
 
- 
+To use a JSR-303 implementation, simply follow the instructions for your preferred
+JSR-303 implementation. The following libraries /SHOULD/ work with feather-rs form validation
+support code out of the box, using `Validation.buildDefaultValidatorFactory();`
+
+	* hibernate validator 4
+	* agimetic-validation
+	* apache beans validation
+
+However, only one JSR-303 implementation is allowed in the classpath for validation
+to work. In the future, feather-rs should let you choose the custom ValidatorFactory for each implementation.
+(See FormRenderer and doc/todo/validation.txt)
+
+## Setting up ##
+
+After choosing these four components, the next step is to setup a working maven2 project.
+This is out of the scope of this tutorial, but an example can be downloaded here: (TODO: add example)
+
+The following tutorials are split up based on the chosen DI container and JAX-RS implementation.
+
+### Spring 3.0 + Jersey ###
+
+	spring3-jersey/02-setting-up-jersey-spring-feather-rs.txt

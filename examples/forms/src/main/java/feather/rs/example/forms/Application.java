@@ -24,14 +24,17 @@ public class Application {
 
 	/**
 	 * The public page view.
-	 * @param context The SecurityContext
-	 * @return The view object
+	 * @return The view object.
 	 */
 	@GET
 	public View getPublicPage() {
 		return getView(new Form<RegistrationForm>(new RegistrationForm()));
 	}
 	
+	/**
+	 * The success page view.
+	 * @return The view object.
+	 */
 	@GET
 	@Path("/success")
 	public View formSuccess() {
@@ -43,16 +46,31 @@ public class Application {
 		};
 	}
 
+	/**
+	 * Returns the primary view, given the Form object
+	 * @param form The Form binding object.
+	 * @return The populated view object.
+	 */
 	protected View getView(Form<RegistrationForm> form)
 	{
 		return new PublicPageView(form);
 	}
 
+	/**
+	 * Action called when the form is submitted.
+	 *
+	 * @param form The Form binding object.
+	 * @return An HTTP redirect to 'success' on success, or the populated view on form validation errors.
+	 */
 	@POST
 	public Object formSubmit(Form<RegistrationForm> form) 
 	{			
 		RegistrationForm registrationForm = form.getObject();
 		
+		//custom validation code, checking if password and password2 are valid fields (NotNull) and
+		// then checking if they are the same. 
+		// 
+		// On error, invalid the form and add the error to the form view.
 		if(	form.isValidList("password","password2") && 
 			!registrationForm.getPassword().equals(registrationForm.getPassword2()))
 		{
@@ -84,6 +102,8 @@ class PublicPageView implements View
 	@Override
 	public void render(Html html) throws Exception {
 		html.load(Application.class.getResourceAsStream("public.html"));
+
+		//renders the form
 		html.form("#registrationForm p",formObject);			
 	}
 }

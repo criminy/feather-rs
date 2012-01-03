@@ -1,0 +1,17 @@
+
+2012-01-03
+
+The current implementation of the validation code has two issues:
+
+	1) The ValidationFactory is NOT a singleton.
+	2) The Classpath can only support ONE javax.validation implementation. Having more than one 
+	   implementation is undefined.
+
+To change the JSR-303 validation implementation, we should
+read a property file from `feather.rs.forms.validator`, which should
+contain a canonical classname to the factory implementation. This will
+fix #2.
+
+This would be loaded once in a @Singleton @Named @Provider of type ContextProvider<ValidationFactory . 
+This will fix #1
+
