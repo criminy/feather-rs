@@ -15,3 +15,8 @@ fix #2.
 This would be loaded once in a @Singleton @Named @Provider of type ContextProvider<ValidationFactory . 
 This will fix #1
 
+Resolved:
+
+resolved by placing the standard validation factory in feather.rs.validation. If you want to provide a cusotm
+validator, just don't include feather.rs.validation within the scanning, and provide your OWN
+ContextProvider<ValidationFactory> .

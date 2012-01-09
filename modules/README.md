@@ -5,7 +5,7 @@ feather-rs. Examples include:
 
 	media - provides media exportation functionality.
 	auth - provides authentication functionality.
-    log - provides logging functionality for the core feather-rs system and module authors.  
+	log - provides logging functionality for the core feather-rs system and module authors.  
 
 The list goes on (or will go on) .
 
