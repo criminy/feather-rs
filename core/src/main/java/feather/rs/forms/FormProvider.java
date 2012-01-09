@@ -92,22 +92,17 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 				//TODO: convert string type to valid type
 				//TODO: use some converter database
 				
-				if(getter.getReturnType().equals(Boolean.class))
-				{
-					val = Boolean.parseBoolean(e.getValue());
+				if(getter.getReturnType().equals(Boolean.class) ||  getter.getReturnType().toString().equals("boolean"))
+				{				
+					//always use trye for 'checkboxes' since the existence of it 
+					// in the form POST is what 'checked' means.
+					val = true;
 				}else if(getter.getReturnType().equals(String.class))
 				{
 					val = e.getValue();
-				}else if(getter.getReturnType().toString().equals("boolean"))
-				{
-					val = Boolean.parseBoolean(e.getValue());
 				}
 				
-				if(getter != null) {
-					System.out.println(getter.getReturnType());
-					System.out.println(e.getKey());
-					System.out.println(val);
-					System.out.println("-----------");
+				if(getter != null) {				
 					o.getClass().getMethod("set" + e.getKey(),getter.getReturnType()).invoke(o,val);
 				}
 			}

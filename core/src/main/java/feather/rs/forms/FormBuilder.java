@@ -8,12 +8,41 @@ import javax.inject.Named;
 
 import feather.rs.html.Html;
 
+class FieldNameTypePair {
+	private String fieldName;
+	private Class<?> fieldType;
+	
+	public String getFieldName() {
+		return fieldName;
+	}
+	
+	public Class<?> getFieldType() {
+		return fieldType;
+	}
+	
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
+	
+	public void setFieldType(Class<?> fieldType) {
+		this.fieldType = fieldType;
+	}
+
+	public FieldNameTypePair(String fieldName, Class<?> fieldType) {
+		super();
+		this.fieldName = fieldName;
+		this.fieldType = fieldType;
+	}
+	
+	
+}
+
 @Named
 public class FormBuilder {
 
 	public void renderFormUsingP(Html html,String cssSelector,Form formObject)
 	{
-		List<String> fieldNames = new ArrayList<String>();
+		List<FieldNameTypePair> fields = new ArrayList<FieldNameTypePair>();
 		
 		Object o = formObject.getObject();
 		
@@ -22,14 +51,16 @@ public class FormBuilder {
 		{
 			if(m.getName().startsWith("set"))
 			{				
-				fieldNames.add(m.getName().substring(3));
+				fields.add(new FieldNameTypePair(m.getName().substring(3),m.getParameterTypes()[0]));
+				//fieldNames.add(m.getName().substring(3));
 			}
 		}
 		
 		StringBuffer htmlForm = new StringBuffer();
 		
-		for(String s : fieldNames)
+		for(FieldNameTypePair field : fields)
 		{
+			String s = field.getFieldName();
 			String val;
 			try {
 				//TODO: use /is/ for bool values and /get/ for all others.
@@ -41,22 +72,37 @@ public class FormBuilder {
 			} catch (Exception e) {
 				throw new RuntimeException(e);//todo: use a custom  exception type
 			}
-			
-			
+					
 			String err = "";
-			if(formObject != null) {
+			if(formObject != null) {				
 				err = formObject.getError( s.substring(0,1).toLowerCase() + s.substring(1));
 				err = (err == null ? "" : err);
 			}
 			
-			htmlForm.append(
-				String.format("<p><label>%s:</label><input name='%s' id='%s' type='text' value='%s'/><br/><span class='error'>%s</span></p>\n",
-					s,
-					s,
-					s,
-					val == null ? "" : val,
-					err
+			if(field.getFieldType().toString().equals("boolean") || field.getFieldType().equals(Boolean.class))
+			{
+				if(val.equalsIgnoreCase("true"))
+					val = "checked='true';";
+				else
+					val = "";							
+				htmlForm.append(
+						String.format("<p><label>%s:</label><input name='%s' id='%s' type='checkbox' %s /><br/><span class='error'>%s</span></p>\n",
+								s,
+								s,
+								s,
+								val == null ? "" : val,
+								err));
+			}else{
+			
+				htmlForm.append(
+						String.format("<p><label>%s:</label><input name='%s' id='%s' type='text' value='%s'/><br/><span class='error'>%s</span></p>\n",
+								s,
+								s,
+								s,
+								val == null ? "" : val,
+									err
 				));
+			}
 		}
 		
 		html.html(cssSelector,htmlForm.toString());
