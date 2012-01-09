@@ -16,13 +16,13 @@ import java.util.Set;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 
@@ -38,6 +38,7 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 	Log log = LogFactory.getLog(FormProvider.class);
 	
 	@Context HttpServletRequest request;
+	@Context ContextResolver<ValidatorFactory> validatorContextResolver;
 	
 	@Override
 	public boolean isReadable(Class type, Type genericType,
@@ -73,13 +74,9 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 			{
 				return new Form<T>(o,false);
 			}
-			
-			//TODO: inject ValidatorFactory using a @Named @Provider ContextProvider<ValidatorFactory>
-			// and insure it is a singleton.
-		        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-		        Validator validator;
-	        	validator = factory.getValidator();
-			
+					        
+		    Validator validator;
+			validator = this.validatorContextResolver.getContext(ValidatorFactory.class).getValidator();			
 					
 			String x = IOUtils.toString(entityStream);
 			Map<String, String> fields = formPostToMap(x);	
