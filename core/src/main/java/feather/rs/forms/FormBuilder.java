@@ -32,7 +32,12 @@ public class FormBuilder {
 		{
 			String val;
 			try {
-				val = (String) o.getClass().getMethod("get" + s).invoke(o);
+				//TODO: use /is/ for bool values and /get/ for all others.
+				Object origVal = o.getClass().getMethod("get" + s).invoke(o);
+				if(origVal == null) 
+					val  = "";
+				else
+					val = origVal.toString(); //TODO: use system converters					
 			} catch (Exception e) {
 				throw new RuntimeException(e);//todo: use a custom  exception type
 			}

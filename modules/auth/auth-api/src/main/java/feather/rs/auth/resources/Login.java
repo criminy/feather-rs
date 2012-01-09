@@ -14,6 +14,7 @@ import feather.rs.View;
 import feather.rs.auth.AuthenticationException;
 import feather.rs.auth.LoginService;
 import feather.rs.html.Html;
+import feather.rs.forms.Form;
 
 /**
  * An abstract class which represents a Login page.
@@ -34,7 +35,7 @@ public class Login {
 	 */
 	@GET
 	public View loginView() {
-		return getView(null);
+		return getView(new Form(new LoginForm()),null);
 	}
 	
 	/**
@@ -46,19 +47,24 @@ public class Login {
 	 * @return
 	 */
 	@POST
-	public Response attemptLogin(
-			@FormParam("username") String username,
-			@FormParam("password") String password,
-			@FormParam("rememberMe") @DefaultValue("false") boolean rememberMe)
-	{		
-		try {
-			loginService.login(username, password, rememberMe);
-		}catch(AuthenticationException exn)
-		{
-			return onFailure(exn);
+	public Response attemptLogin(Form<LoginForm> form)
+	{	
+		LoginForm loginForm = form.getObject();	
+		if(form.isValid()) {
+			try {
+				loginService.login(
+					loginForm.getUsername(),
+				        loginForm.getPassword(),
+					loginForm.isRememberMe());
+			}catch(AuthenticationException exn)
+			{
+				return onFailure(form,exn);
+			}
+			return onSuccess(form);
+		}else{
+			return onFailure(form,null);
 		}
 		
-		return onSuccess();	
 	}
 
 	/**
@@ -67,22 +73,24 @@ public class Login {
 	 * @param exn The optional {@link AuthenticationException}
 	 * @return The populated View.
 	 */
-	public View getView(AuthenticationException exn)
+	public View getView(Form<LoginForm> loginForm,
+			AuthenticationException exn)
 	{
 		//build path using UriBuilder.fromResource because the actual URI might be customized
 		//	by some end-user magic.
 		String path = UriBuilder.fromResource(this.getClass()).build().toString();
 		if(exn == null)
-			return new LoginView(path);
+			return new LoginView(loginForm,path);
 		else
-			return new LoginView(path,convertErrorMessage(exn));
+			return new LoginView(loginForm,path,convertErrorMessage(exn));
 	}
 
 	/**
 	 * Callback method to invoke when we successfully authenticate.
 	 * @return The JAX-RS {@link Response} 
 	 */
-	public Response onSuccess() { return Response.ok(getView(null)).build();	}
+	public Response onSuccess(Form<LoginForm> form) 
+		{ return Response.ok(getView(form,null)).build();	}
 	
 	/**
 	 * Callback method to invoke when we fail to authenticate.
@@ -90,7 +98,7 @@ public class Login {
 	 * @param exn The {@link AuthenticationException} representing the failure.
 	 * @return The JAX-RS {@link Response}
 	 */
-	public Response onFailure(AuthenticationException exn) { return Response.ok(getView(exn)).build();	}
+	public Response onFailure(Form<LoginForm> form,AuthenticationException exn) { return Response.ok(getView(form,exn)).build();	}
 	
 	
 	/**
@@ -115,22 +123,25 @@ class LoginView implements View
 
 	String msg;
 	String actionUrl;
-	
-	public LoginView(String actionUrl,String msg) {
+	Form<LoginForm> formObject;
+
+	public LoginView(Form<LoginForm> form,String actionUrl,String msg) {
 		this.msg = msg;
 		this.actionUrl = actionUrl;
+		this.formObject = form;
 	}
 	
-	public LoginView(String actionUrl) {
+	public LoginView(Form<LoginForm> form,String actionUrl) {
 		this.msg = null;
 		this.actionUrl = actionUrl;
+		this.formObject = form;
 	}
 	
 	@Override
 	public void render(Html html) throws Exception {
 		html.load(Login.class.getResourceAsStream("login.html"));
 		html.bindAttr("#loginForm", "action",actionUrl);
-		
+		html.form("#loginForm p",formObject);
 		
 		if(msg != null)
 		{

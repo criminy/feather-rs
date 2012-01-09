@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
@@ -60,8 +61,6 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 		if(genericType instanceof ParameterizedType)
 		{
 			Type t = ((ParameterizedType)genericType).getActualTypeArguments()[0];
-			System.out.println(t.toString());
-			System.out.println(t.getClass().getCanonicalName());
 			wrappedJavaBeanType = (Class<T>) t;
 		}
 		if(wrappedJavaBeanType == null)
@@ -87,7 +86,30 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 			
 			for(Entry<String, String> e : fields.entrySet())
 			{
-				o.getClass().getMethod("set" + e.getKey(),String.class).invoke(o,e.getValue());
+				Method getter = o.getClass().getMethod("get" + e.getKey());
+				Object val = null;
+				
+				//TODO: convert string type to valid type
+				//TODO: use some converter database
+				
+				if(getter.getReturnType().equals(Boolean.class))
+				{
+					val = Boolean.parseBoolean(e.getValue());
+				}else if(getter.getReturnType().equals(String.class))
+				{
+					val = e.getValue();
+				}else if(getter.getReturnType().toString().equals("boolean"))
+				{
+					val = Boolean.parseBoolean(e.getValue());
+				}
+				
+				if(getter != null) {
+					System.out.println(getter.getReturnType());
+					System.out.println(e.getKey());
+					System.out.println(val);
+					System.out.println("-----------");
+					o.getClass().getMethod("set" + e.getKey(),getter.getReturnType()).invoke(o,val);
+				}
 			}
 			
 			Form<T> f = new Form<T>(o,true);

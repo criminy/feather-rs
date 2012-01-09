@@ -15,5 +15,6 @@
 
     <!-- include the core library support -->
 	<context:component-scan base-package="feather.rs.core"/>
-				
+	<context:component-scan base-package="feather.rs.forms"/>
+			
 </beans>
