@@ -56,6 +56,7 @@ public class Html {
 		Elements ex = document.select("a");
 		Elements ex2 = document.select("link");
 		Elements ex3 = document.select("form");
+		Elements ex4 = document.select("img");
 		for(Element e : ex)
 		{
 			updateLink(req, e);
@@ -65,6 +66,10 @@ public class Html {
 			updateLink(req, e);
 		}
 		for(Element e : ex3)
+		{
+			updateLink(req, e);
+		}
+		for(Element e : ex4)
 		{
 			updateLink(req, e);
 		}
@@ -111,6 +116,26 @@ public class Html {
 									Integer.toString(req.getServerPort()),
 									req.getContextPath(),
 									e.attr("action")));
+				}
+			
+		}else if(e.tagName().equalsIgnoreCase("img") && e.attr("src").startsWith("/"))  {
+			if( (req.getServerPort() == 80 && req.getProtocol().matches("HTTP/.*")) || 
+					(req.getServerPort() == 443 && req.getProtocol().matches("HTTPS/.*")))
+				{					
+					e.attr("src", 
+							String.format("%s://%s%s%s",
+									convertProtocol(req.getProtocol()),
+									req.getServerName(),
+									req.getContextPath(),
+									e.attr("src")));
+				}else{
+					e.attr("src", 
+							String.format("%s://%s:%s%s%s",
+									convertProtocol(req.getProtocol()),
+									req.getServerName(),
+									Integer.toString(req.getServerPort()),
+									req.getContextPath(),
+									e.attr("src")));
 				}
 			
 		}
