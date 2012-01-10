@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
+import org.jsoup.parser.Tag;
 import org.jsoup.select.Elements;
 
 import feather.rs.View;
@@ -201,16 +202,24 @@ public class Html {
 			for(Element ch : e.children()) ch.remove();		
 					
 			for (T t : iter) 
-			{			
-				Element newChild = new Element(repeatedChild.tag(),repeatedChild.baseUri());
-				//newChild.text(repeatedChild.text());
-				newChild.attributes().addAll(repeatedChild.attributes());
-				
-				for(Node child : repeatedChild.childNodes())
-				{
-					newChild.appendChild(child.clone());	
+			{	
+				Element newChild;
+	
+				if(repeatedChild != null) {
+					newChild = new Element(repeatedChild.tag(),repeatedChild.baseUri());
+					newChild.attributes().addAll(repeatedChild.attributes());
+					
+					for(Node child : repeatedChild.childNodes())
+					{
+						newChild.appendChild(child.clone());	
+					}
+					//newChild.text(repeatedChild.text());			
+				}else{
+					newChild = new Element(Tag.valueOf("div"),"");
 				}
-				
+		
+
+			
 				
 				
 				Item<T> i = new Item<T>(t,newChild);				
