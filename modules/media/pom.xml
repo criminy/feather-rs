@@ -6,6 +6,7 @@
 		<groupId>feather.rs</groupId>
 		<artifactId>feather.rs.parent</artifactId>
 		<version>0.2-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
 	</parent>
 
 	<artifactId>feather.rs.modules.media</artifactId>
