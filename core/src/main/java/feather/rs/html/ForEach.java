@@ -45,5 +45,20 @@ public interface ForEach<T> {
 		}
 
 	};
+	
+	/**
+	 * ForEach object which, when built, sets the html of every item. 
+	 */
+	public static Fn1<ForEach,String> SetHtml = new Fn1<ForEach,String>() {
+		@Override
+		public ForEach get(final String key) {
+			return new ForEach() {
+				@Override
+				public void render(Item item) {
+					item.setHtml(item.getObject().toString());					
+				}
+			};
+		}
+	};
 
 }

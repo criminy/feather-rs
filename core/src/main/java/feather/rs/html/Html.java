@@ -217,10 +217,6 @@ public class Html {
 				}else{
 					newChild = new Element(Tag.valueOf("div"),"");
 				}
-		
-
-			
-				
 				
 				Item<T> i = new Item<T>(t,newChild);				
 				foreach.render(i);				

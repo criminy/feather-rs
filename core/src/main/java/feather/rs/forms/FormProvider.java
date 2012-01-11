@@ -41,7 +41,7 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 	@Context ContextResolver<ValidatorFactory> validatorContextResolver;
 	
 	@Override
-	public boolean isReadable(Class type, Type genericType,
+	public boolean isReadable(Class<?> type, Type genericType,
 			Annotation[] annotations, MediaType mediaType) {
 		if(Form.class.isAssignableFrom(type))
 		{
@@ -51,10 +51,14 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 		}
 	}
 
+	
+	
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public Form<T> readFrom(Class type, Type genericType,
+	public Form<T> readFrom(Class<Form<T>> type, Type genericType,
 			Annotation[] annotations, MediaType mediaType,
-			MultivaluedMap httpHeaders, InputStream entityStream)
+			MultivaluedMap<String,String> httpHeaders, InputStream entityStream)
 			throws IOException, WebApplicationException {
 		
 		Class<T> wrappedJavaBeanType = null;

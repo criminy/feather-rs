@@ -40,7 +40,7 @@ class FieldNameTypePair {
 @Named
 public class FormBuilder {
 
-	public void renderFormUsingP(Html html,String cssSelector,Form formObject)
+	public void renderFormUsingP(Html html,String cssSelector,Form<?> formObject)
 	{
 		List<FieldNameTypePair> fields = new ArrayList<FieldNameTypePair>();
 		
