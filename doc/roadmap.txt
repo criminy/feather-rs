@@ -1,0 +1,22 @@
+# feather-rs project roadmap #
+
+Roadmap for releases
+
+## 0.2-RELEASE ##
+
+	* Extended form rendering support.
+	* Pagination support.
+
+## 0.3-RELEASE ##
+
+## 1.0-RELEASE ##
+
+1.0-RELEASE features may be moved up to 0.3,0.4,-> 0.9. 
+
+	* (POSSIBLE) pre-compile the HTML trees for faster templating support.
+	* (POSSIBLE) extract HTML templating system into its own module.
+	* Refactored view file resolution.
+	* Component System built on top of the standard HTML view system.
+		* Ajax support.
+	* Security annotation support (@Secured, maybe javax.annotation.security support) .
+	* More example applications.
