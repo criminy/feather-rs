@@ -37,7 +37,7 @@ public class Application {
 	 * @param context The SecurityContext
 	 * @return The view object
 	 */
-	
+	//secured elsewhere
 	@GET
 	@Path("/secured")
 	public View getSecuredPage(@Context SecurityContext context) {

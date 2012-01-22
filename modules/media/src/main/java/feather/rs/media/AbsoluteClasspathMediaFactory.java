@@ -14,6 +14,7 @@ public abstract class AbsoluteClasspathMediaFactory implements MediaFactory {
 	
 	public abstract String getPathToFolder();
 	
+	//TODO: move to abstract class
 	@Override
 	public String getType(String path) {
 		{

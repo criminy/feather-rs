@@ -54,7 +54,7 @@ JSR-303 implementation. The following libraries /SHOULD/ work with feather-rs fo
 support code out of the box, using `Validation.buildDefaultValidatorFactory();`
 
 	* hibernate validator 4
-	* agimetic-validation
+	* agimatic-validation
 	* apache beans validation
 
 However, only one JSR-303 implementation is allowed in the classpath for validation

@@ -8,6 +8,10 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import feather.rs.auth.AuthenticationException;
 import feather.rs.auth.LoginService;
 
+/**
+ * Implementation of the LoginService interface using
+ * Apache Shiro.
+ */
 @Named
 public class ShiroLoginService implements LoginService
 {

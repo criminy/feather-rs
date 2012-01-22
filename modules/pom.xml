@@ -16,5 +16,6 @@
 		<module>media</module>
 		<module>log</module>
 		<module>auth</module>
+		<module>wizard</module>
 	</modules>
 </project>

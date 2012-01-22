@@ -1,0 +1,78 @@
+# feather-rs adding our first page #
+
+To add our first page, we need to create 
+the JAX-RS resource within the package from 
+'tutorial 02'. 
+
+Here is our page within feather.rs.tutorial1.FrontPage:
+
+	@Path("/")
+	@Named
+	public FrontPage {
+
+		@GET
+		public String index() {
+			return "front page";
+		}
+	}
+
+Now this endpoint can be found when when we run the application.
+
+The next step is to take this standard text/plain view
+and make it an HTML view:
+
+	@Path("/")
+	@Named
+	public FrontPage {
+		@GET
+		public View index() {
+			return new FrontPageView();
+		}
+	}
+
+	class FrontPageView implements View {
+		@Override
+		public void render(Html html) throws Exception {
+			html.loadAsString("<h1>Front page</h1>");
+		}
+	}
+
+There are a few things to note:
+
+	* the view is created with 'new'. Yes, Views in feather-rs are, by
+	  default, un-managed. This is so you can control the lifecycle of the
+	  view and the data sent to the view easily. If required, you can
+	  add a constructor or static factory methods to the FrontPageView
+	  to make compile-time checks on the data being
+	  passed to your View.
+	
+	* We are specifying the html in the java code. The Html object
+	  within feather-rs allows loading HTML content from a string,
+	  from a file, or from an InputSource.
+
+	* The View class is defined within the FrontPage.java. Since the view
+	  class has no requirements about bean management, they can be
+          of any scope or location as needed! This allows as much view-controller
+	  seperation as required in your project.
+
+
+Let us re-write this using an external HTML file:
+
+	class FrontPageView implements View {
+		@Override
+		public void render(Html html) throws Exception {
+			html.load("classpath:frontpage.html");
+		}
+	}
+
+	## frontpage.html ##
+
+	<html>
+		<head>
+
+		</head>
+		<body>
+			<h1>Front Page</h1>
+			<p id="content">Hello World</p>	
+		</body>
+	</html>

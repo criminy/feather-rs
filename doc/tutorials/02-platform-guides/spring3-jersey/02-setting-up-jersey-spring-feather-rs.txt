@@ -8,6 +8,18 @@ This feather-rs tutorial is using the following implementations:
 	* log-simple for feather-rs logging.
 	* Jetty for the servlet container.
 
+Since we are using spring, we need to make a decision now: Which package do we put our spring components in?
+
+	Well for this tutorial we can put them in 'feather.rs.tutorial1' . Remember this for later.
+
+There are also other decisions to make?
+	* Servlet 3 or 2.X? 
+	* Spring XML config or JavaConfig? 
+
+We will go with Servlet 2.X, since that will allow us to run in the majority of the servlet containers.
+
+We will also go with Spring XML config instead of JavaConfig, just for simplicity.
+
 ## Maven Dependencies ##
 
 To setup, we first need maven dependencies for the following
@@ -76,5 +88,43 @@ projects in our WAR project:
 			<version>4.2.0.Final</version>
 		</dependency>
 
+## XML configuration ##
 
+Both the servlet system and spring require some XML.
 
+### src/main/webapp/WEB-INF/web.xml ###
+...
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:applicationContext.xml</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>Jersey Web Application</servlet-name>
+		<servlet-class>com.sun.jersey.spi.spring.container.servlet.SpringServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>Jersey Web Application</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+...
+
+### src/main/resources/applicationContext.xml ###
+
+    <!-- include our code -->
+    <context:component-scan base-package="feather.rs.tutorial1"/>
+
+    <!-- include the core library support -->
+    <context:component-scan base-package="feather.rs.core"/>
+
+Remember the package name from above? We place that inside of our spring configuration. 
+We also put the core feather-rs packagee in the spring configuration. This will bootstrap
+the main system inside a DI container. 
+
+Now that this is done, we have a JAX-RS application sitting on / with HTML templating. We can start adding our JAX-RS classes under feather.rs.tutorial1.  We are done with the platform specific parts, for now! 

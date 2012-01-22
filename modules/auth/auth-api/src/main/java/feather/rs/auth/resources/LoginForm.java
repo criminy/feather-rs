@@ -2,6 +2,9 @@ package feather.rs.auth.resources;
 
 import javax.validation.constraints.*;
 
+/**
+ * Form object for logging in to the system.
+ */
 public class LoginForm {
 
 	@NotNull

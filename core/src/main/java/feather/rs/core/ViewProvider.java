@@ -22,13 +22,11 @@ import feather.rs.html.Html;
 import feather.rs.log.Log;
 import feather.rs.log.LogFactory;
 
-
 /**
  * The provider which is responsible for converting and writing the {@link View} objects
  * to the Servlet container.
  * 
  * @author sheenobu
- *
  */
 @Named
 @Provider
