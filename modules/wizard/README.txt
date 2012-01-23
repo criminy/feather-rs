@@ -1,4 +1,3 @@
-
 The wizard module is a module which provides a form wizard API and facilities. Wizard
 information can be stored in the session and/or a database, and aggregated for
 the end of the wizard actions.
