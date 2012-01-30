@@ -17,5 +17,6 @@
 		<module>log</module>
 		<module>auth</module>
 		<module>wizard</module>
+		<module>growl</module>
 	</modules>
 </project>

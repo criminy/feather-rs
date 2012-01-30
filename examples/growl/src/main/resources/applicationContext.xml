@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd 
+		">
+
+	<!-- include our code -->
+	<context:component-scan base-package="feather.rs.example.growl.web" />
+	<context:component-scan base-package="feather.rs.example.growl.service" />
+
+
+	<!-- include the media plugin resources, which expose /media -->
+	<context:component-scan base-package="feather.rs.media.resources" />
+
+	<!-- include the growl plugin resources and services, which expose /growls -->
+	<context:component-scan base-package="feather.rs.growl.resources" />
+	<context:component-scan base-package="feather.rs.growl.service" />
+
+
+	<!-- include the core library support -->
+	<context:component-scan base-package="feather.rs.core" />
+	<context:component-scan base-package="feather.rs.validation" />
+	<context:component-scan base-package="feather.rs.forms" />
+
+
+	<task:annotation-driven executor="myExecutor"
+		scheduler="myScheduler" />
+
+	<task:executor id="myExecutor" pool-size="5" />
+
+	<task:scheduler id="myScheduler" pool-size="10" />
+
+</beans>

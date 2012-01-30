@@ -1,0 +1,23 @@
+
+
+0.1-runtime-meta-annotations
+0.1-runtime-meta-annotations-instrumentation
+	the meta annotation library that can override annotation values at runtime.
+
+0.4-attr-expr 
+	attribute expressions which parse attributes as expressions and dynamic values.
+
+0.4-event 
+	event api, event implementation using camel,
+	requires 0.1-runtime-meta-annotations if you want to use dynamic property Endpoints.
+
+0.4-css
+	compiled CSS support
+
+0.4-growl
+	jquery/growl notification support
+
+1.0-actions
+	form or link to java method support, different from event support.
+	
+

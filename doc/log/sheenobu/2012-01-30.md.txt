@@ -1,0 +1,41 @@
+# Persistence #
+
+2012-01-30
+
+I'm kind of stuck on persistence. For the GrowlService implementation,
+there are thread-safe static Maps and Sets, and I am trying to figure out
+the best way to implement this while supporting multiple nodes and scalability.
+
+I'm looking at products like Hazelcast (which seems to perform the clustering/distribution)
+and terracotta (which is a central database). This may be an instance where
+we implement the module system like this:
+
+
+
+persistence-hazelcast------------|-----------persistence-terracotta
+		    	persistence-api
+				|
+				|
+				|
+	   		      growl
+
+
+where persistence api is an API for arbitrary object persistence. For example,
+
+ObjectA and ObjectB have different persistence machanisms:
+
+	class PersistenceConfiguration {
+		public void configure() {
+			GrowlService.Provider = Hazelcast.class;
+		}
+	}
+
+
+class GrowlService {
+	PersistenceFactory<Set<String> > persistentSet;
+	
+	public static Class<PersistenceProvider> Provider;
+
+	persistentSet.get(Provider).add("SomeItem");
+}
+

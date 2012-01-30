@@ -17,5 +17,6 @@
 		<module>secured</module>
 		<module>templating</module>
 		<module>forms</module>
+		<module>growl</module>
 	</modules>
 </project>
