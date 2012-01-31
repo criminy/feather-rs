@@ -145,6 +145,7 @@ public class Html {
 	public void renderTo(String cssSelector, View view) throws Exception
 	{
 		Html newHtml = new Html();
+		newHtml.setFormBuilder(formBuilder);
 		view.render(newHtml);
 		Elements ex = document.select(cssSelector);
 	
