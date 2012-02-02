@@ -2,6 +2,8 @@ package feather.rs.example.hw.web;
 
 import java.net.URI;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -18,12 +20,15 @@ import feather.rs.example.hw.db.HelloWorldDatabase;
  * @author sheenobu
  *
  */
+@Named
 @Path("/")
 public class HelloWorldResource {
 
 	//	we don't need to load this from a singleton context (yet) because
 	// 	the database is just simple, tiny, and in memory.
-	HelloWorldDatabase db = new HelloWorldDatabase();
+	
+	@Inject
+	HelloWorldDatabase db;
 	
 	@GET
 	public Response redirect() {
