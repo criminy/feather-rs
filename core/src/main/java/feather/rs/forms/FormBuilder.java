@@ -105,7 +105,7 @@ public class FormBuilder {
 			}
 		}
 		
-		html.html(cssSelector,htmlForm.toString());
+		html.getDocument().select(cssSelector).html(htmlForm.toString());		
 	}
 	
 }

@@ -1,5 +1,6 @@
 package feather.rs.example.hw.web;
 
+import javax.inject.Named;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
@@ -13,6 +14,7 @@ import feather.rs.example.hw.db.NotFoundException;
  * @author sheenobu
  *
  */
+@Named
 @Provider
 public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundException> {
 

@@ -140,7 +140,8 @@ class LoginView implements View
 	@Override
 	public void render(Html html) throws Exception {
 		html.load(Login.class.getResourceAsStream("login.html"));
-		html.bindAttr("#loginForm", "action",actionUrl);
+		
+		html.getDocument().select("#loginForm").attr("action",actionUrl);			
 		html.form("#loginForm p",formObject);
 		
 		if(msg != null)

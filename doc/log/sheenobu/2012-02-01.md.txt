@@ -1,0 +1,109 @@
+# Abstractions #
+
+2012-02-01
+
+There are a few interesting abstractions in play on this framework, and one
+in particular that I had decided to hide. Now..I'm not so sure it should be hidden.
+
+
+The general abstractions:
+
+
+JAX-RS (hides javax.servlet API, but doesn't hide protocol)
+feather-rs cores Html.java (completely hides DOM).
+
+I've decided we should remove the DOM hiding and start modifying DOM directly, a-la Javascript. We
+can work within the DOM and extend it, using Html as a better (and not replacement) interface for 
+the DOM.
+
+This CAN allow us to eventually abstract out the view system into multiple implementations:
+
+ * W3C DOM-based views.
+ * JSoup-based views (currently what is in there behind the scenes)
+ * Velocity-based views.
+
+but I say can and not will because I still don't know whether the scope of this library
+should cover additional templating libraries, or I should focus on stenghthening
+the code-based View system. Probably just strengthen the code-based View system.
+
+Here is a simple view which uses the internal DOM manipulation. Components like 'Table'
+can be built to use the DOM objects directly, and their interactions with the DOM tree
+would be very transparent. 'title(str)' would give you a TH within THEAD, which you can
+modify with CSS and whatever else.
+
+class MyView implements View {
+
+    Page<Movie> movies;
+
+    public void render(Html html) {
+        Document d = html.getDocument();
+
+        //build a table
+        Table t = new Table(d);
+
+        //attach the Table instance to some HTML tree.
+        t.setTableRoot(d.getElementById("tableId"));
+
+        // add some titles
+        Element titleColumn = t.title("Title");
+        t.title("Description");
+        
+        //add a class to the title column
+        titleColumn.class("title");
+        
+
+        //final TemplateElement template = html.loadTemplate("<a href='${link}' class='button'>${title}</a>");
+        final TemplateElement template = html.loadTemplateById("templateId"); 
+            <html>
+                <head>
+                    <templates>
+                        <template id="templateId">
+                            <a href="${link}" class="button">${title}</a>
+                        </template>
+                    </templates>
+                </head>
+                <div template id="templateId"> //marked as template so the HTML processor can remove/clean up
+            ...
+
+        Micro-templating within code, to allow re-usable code to be defined within HTML files.
+        This is a possibility...
+
+        // iterate over all the movies, processing each row and build each cell individually.
+        t.rows(movies,new RowHandler<Movie>() {
+            boolean odd = false;
+            public void process(Row row, Movie movie) {
+                offset++;
+
+                Element rowElem = row.getElement();
+
+                if(odd) {
+                    rowElem.attr("class","odd);
+                }else{
+                    rowElem.attr("class","even");
+                }
+
+                Element titleCell = row.insert(movie.getTitle());
+
+                {//render the template
+                    Map<String,String> m = new HashMap();
+                    m.put("link","/movie/" + movie.getId());
+                    m.put("title",movie.getTitle());
+    
+                    row.insert(template.render(m));
+
+                    //other possible API, using fluent builder.
+                    row.insert(template.start().put("movie",movie).put("link","/movie/${movie.id}").put("title",movie.getTitle()).build());
+                }
+
+                titleCell.class("title");
+                row.insert(movie.getDescription());
+
+                //we can now do things to each cell, or, like above, modify the whole row.
+            }
+        });
+
+    }
+    
+}
+   
+

@@ -3,12 +3,15 @@ package feather.rs.example.hw.db;
 import java.util.List;
 import java.util.ArrayList;
 
+import javax.inject.Named;
+
 /**
  * Database which stores hello world messages.
  * 
  * @author sheenobu
  *
  */
+@Named
 public class HelloWorldDatabase {
 
 	/**

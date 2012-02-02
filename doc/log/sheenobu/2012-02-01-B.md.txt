@@ -1,0 +1,114 @@
+# Templating #
+
+
+Well I've successfully implemented the templating within the
+HelloWorld application. The relavent snippets are at the bottom.
+
+I'm still not 100% sure about the Map within the renderTemplate
+function. This is a place for a fluent builder, though.
+
+    <ul id="languages">
+        <li id="currentLangTemplate" template>${language}</li>
+        <li id="langTemplate" template><a href="${language}">${language}</a></li>           
+    </ul>
+
+    @Override
+    public void render(Html html) throws Exception {
+        html.load(HelloWorldView.class.getResourceAsStream("helloworld.html"));
+
+        //render the simple message
+        html.bindValue("#message", message);
+
+        //render the list of languages.
+        for(Element e : html.getDocument().select("#languages"))
+        {                               
+            for(String language : languages) {
+                
+                Map<String,Object> ctx = new HashMap<String, Object>();
+                ctx.put("language",language);
+                
+                if(language.equalsIgnoreCase(currentLang)){
+                    e.append(html.renderTemplate("currentLangTemplate",ctx));
+                }else{
+                    e.append(html.renderTemplate("langTemplate",ctx));
+                }
+            }
+        }
+    }
+
+    //when the HTML file is initially loaded:
+    //aggregate and remove the specified template tags from the output HTML doc.
+    for(Element e : html.getDocument().select("[template]"))
+    {
+        Element cl = e.clone();         
+        templates.put(e.id(),cl.toString());
+        e.remove();
+    }
+
+Eventually I want to be able to do lists and tables better.
+
+    HtmlList l = html.list("#languages");   //finds all templates within element.
+    for(String language : languages) {
+        l.put("language",language);
+        if(language.equalsIgnoreCase(currentLang))
+            l.row(l.template("currentLangTemplate"));
+        else   
+            l.row(l.template("langTemplate"));
+    }
+
+HtmlList is would be a stateful render context. Any messages sent to the HtmlList
+get sent to the JSoup document backing it. This allows us to not have to use a fluent builder
+OR a hashmap. HtmlList itself tracks template state alongside HTML tree state.
+
+methods like put, get, and clear are for modifying the template/EL-context.
+
+l.row adds a new row to the list.
+
+l.template renders a template using the EL-Context.
+
+
+This is a possible alternative API, but I think as long as
+we can have objects like 'HtmlList' and 'HtmlTable', whether
+or not they are pulled manually by code or injected using
+Annotations is a stylistic choice. I think I like the first one, myself.
+The second one only succeeds in providing places for optimization
+that the first one can't (templates can be loaded at start-up time, 
+multiple onRender functions can be called asynchronously..but ONLY if the
+backend HTML tree was thread-safe and other multi-threading issues there).
+
+    @From("languages.html")
+    class Page {
+
+        @Select("#languages") 
+        @Single 
+        private HtmlList l;
+
+        @Select("#message")
+        @Single
+        private Text text;
+
+        @Inject LanguageDatabase db;
+        @In("currentLang") String currentLanguage;
+
+        @OnRender 
+        public void renderList() {
+            List<String> languages = db.getLanguages();
+            for(String lang : languages) {
+                l.put("language",lang);       
+                if(lang.equalsIgnoreCase(currentLanguage) {
+                    l.row(l.template("currentLangTemplate"));
+                }else{
+                    l.row(l.template("langTemplate"));
+                }
+            }
+        }
+
+        @OnRender
+        public void renderMessage() {
+            text.set(db.getHelloWorldMessage(currentLanguage));
+        }
+    }
+
+
+
+
