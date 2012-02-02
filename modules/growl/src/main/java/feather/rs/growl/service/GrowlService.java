@@ -1,16 +1,14 @@
 package feather.rs.growl.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
@@ -33,27 +31,27 @@ import javax.servlet.http.HttpSession;
 @Named
 public class GrowlService {
 
-	//TODO: convert to use a better storage mechanism.
 	/**
 	 * The message persistence.
 	 */
-	protected static Map<String,Stack<String>> growls = 
-			new ConcurrentHashMap<String, Stack<String>>();
+	@Inject
+	@Named("persistenceGrowls") 
+	protected Map<String,Stack<String>> growls;
 	
-	//TODO: convert to use a better storage mechanism.
 	/**
 	 * Tracks the connected clients.
 	 */
-	protected static Set<String> clients = 
-			Collections.synchronizedSet(new HashSet<String>());
+	@Inject
+	@Named("persistenceGrowlsClients")
+	protected Set<String> clients;			
 
-	//TODO: convert to use a better storage mechanism.
 	/**
 	 * Tracks the amount of seconds a client has to re-connect before
 	 * being dropped, where '0' is the moment of drop.
 	 */
-	protected static Map<String,Integer> clientTimeouts =
-			new ConcurrentHashMap<String, Integer>();
+	@Inject 
+	@Named("persistenceGrowlsClientTimeouts")
+	protected Map<String,Integer> clientTimeouts;
 	
 	private TimeoutRunnable runnable;	
 	private Thread th;
@@ -64,6 +62,7 @@ public class GrowlService {
 	 */
 	@PostConstruct
 	public void registerTimeoutThread() {
+		//TODO: totally not cluster safe
 		runnable = new TimeoutRunnable();
 		runnable.growlService = this;
 		th = new Thread(runnable);		
@@ -108,7 +107,7 @@ public class GrowlService {
 	 */
 	public void push(String id, String message)
 	{		
-		if(!growls.containsKey(id))			
+		if(growls.get(id) == null)			
 		{
 			growls.put(id,new Stack<String>());
 		}
@@ -134,7 +133,7 @@ public class GrowlService {
 	 * @return The List of messages.
 	 */
 	public List<String> popAll(String id) {		
-		if(!growls.containsKey(id))
+		if(growls.get(id) == null)
 		{
 			return new ArrayList<String>();
 		}
@@ -164,15 +163,15 @@ class TimeoutRunnable implements Runnable{
 		Stack<String> toTimeout = new Stack<String>();
 		while(true) {
 			
-			for(String s : GrowlService.clients)
+			for(String s : growlService.clients)
 			{
-				int timeout = GrowlService.clientTimeouts.get(s);
+				int timeout = growlService.clientTimeouts.get(s);
 				timeout--;
 				if(timeout <= 0)
 				{					
 					toTimeout.push(s);
 				}else{
-					GrowlService.clientTimeouts.put(s,timeout);
+					growlService.clientTimeouts.put(s,timeout);
 				}
 			}
 			
@@ -181,9 +180,9 @@ class TimeoutRunnable implements Runnable{
 				// we erase everything a client may have in order
 				// 	to time them out.
 				String id = toTimeout.pop();
-				GrowlService.growls.remove(id);
-				GrowlService.clientTimeouts.remove(id);
-				GrowlService.clients.remove(id);
+				growlService.growls.remove(id);
+				growlService.clientTimeouts.remove(id);
+				growlService.clients.remove(id);
 			}
 			
 			

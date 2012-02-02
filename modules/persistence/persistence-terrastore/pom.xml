@@ -6,29 +6,18 @@
 		<groupId>feather.rs</groupId>
 		<artifactId>feather.rs.parent</artifactId>
 		<version>0.2-SNAPSHOT</version>
-        <relativePath>../../</relativePath>
+		<relativePath>../../../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>feather.rs.modules.growl</artifactId>
+	<artifactId>feather.rs.modules.persistence.terrastore</artifactId>
 	<packaging>jar</packaging>
-	<name>feather.rs.modules.growl</name>
-
+	<name>feather.rs.modules.persistence.terrastore</name>
 
 	<dependencies>
 		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
-		<dependency>
 			<groupId>feather.rs</groupId>
 			<artifactId>feather.rs.core</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>feather.rs</groupId>
-			<artifactId>feather.rs.modules.log.api</artifactId>
-			<version>${project.version}</version>
+			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>feather.rs</groupId>
@@ -36,10 +25,25 @@
 			<version>0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
+			<groupId>terrastore</groupId>
+			<artifactId>terrastore</artifactId>
+			<version>0.8.2</version>
+		</dependency>
+		<dependency>
+			<groupId>terrastore</groupId>
+			<artifactId>terrastore-javaclient</artifactId>
+			<version>2.4.1</version>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>terrastore-repo</id>
+			<name>Terrastore Repository</name>
+			<url>http://m2.terrastore.googlecode.com/hg/repo</url>
+		</repository>
+	</repositories>
+
+
+
 </project>

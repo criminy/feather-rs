@@ -6,18 +6,11 @@
 		<groupId>feather.rs</groupId>
 		<artifactId>feather.rs.parent</artifactId>
 		<version>0.2-SNAPSHOT</version>
+        <relativePath>../../../pom.xml</relativePath>
 	</parent>
 
-	<artifactId>feather.rs.modules</artifactId>
-	<packaging>pom</packaging>
-	<name>feather.rs.modules</name>
+	<artifactId>feather.rs.modules.persistence.api</artifactId>
+	<packaging>jar</packaging>
+	<name>feather.rs.modules.persistence.api</name>
 
-	<modules>
-		<module>media</module>
-		<module>log</module>
-		<module>auth</module>
-		<module>wizard</module>
-		<module>growl</module>
-		<module>persistence</module>
-	</modules>
 </project>

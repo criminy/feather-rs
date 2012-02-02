@@ -13,18 +13,21 @@ we implement the module system like this:
 
 
 persistence-hazelcast------------|-----------persistence-terracotta
-		    	persistence-api
-				|
-				|
-				|
-	   		      growl
+		    		 |
+			persistence-api
+				 |
+				 |
+				 |
+  	   		       growl
 
 
 where persistence api is an API for arbitrary object persistence. For example,
 
 ObjectA and ObjectB have different persistence machanisms:
 
+	@Named
 	class PersistenceConfiguration {
+		@PostConstruct
 		public void configure() {
 			GrowlService.Provider = Hazelcast.class;
 		}
@@ -35,7 +38,53 @@ class GrowlService {
 	PersistenceFactory<Set<String> > persistentSet;
 	
 	public static Class<PersistenceProvider> Provider;
-
-	persistentSet.get(Provider).add("SomeItem");
+	{
+		persistentSet.get(Provider).add("SomeItem");
+	}
 }
 
+
+Crap, looks like to use GrowlService with external state requires a scheduling solution that is clusted, like quartz. quartz
+can use terrastore for clustering/persistence, though:
+
+http://dsoguy.blogspot.com/2009/12/clustered-quartz-scheduler-in-5-minutes.html
+
+possible scope change:
+
+Core features:
+	HTML templating, CSS Selectors
+	Form validation
+	
+Extra features:
+	clusterstack - the clustering provider, with multiple implementations.
+	wizards - requires a clusterstack.
+	growl	- requires a clusterstack.
+	remove persistence-api, roll into clusterstack.
+
+modules/
+	clusterstack/
+		    /wings - spring, quartz, terrastore clustering
+		    /ejb   - EJBs, JPA, JMS
+
+We can define a 'clusterstack'. You must use /this/ clusterstack to get a group of features (storage, timers, etc). Wings is the
+default clusterstack; using spring, quartz, and terrastore. 'EJB' would be another clusterstack; using JMS, JPA, EJB session beans, etc..
+
+You can also define a custom clusterstack, by defining a series of classes.
+
+
+When figuring some of this out, a question keeps coming up. When I've got data structures, what is the difference between 
+persistence and clustering, in practice. 
+
+With clustering, you transmit to other nodes.
+With persistence, you save to a central store (which itself can be clustered).
+
+So I know this much, but in practice, why should I use clustering over persistence? Is it about object lifecycle (anything living over some
+arbitrary threshold needs to be saved to persistence, otherwise it's just clustered?).
+
+For example, per-user growl messages have a life of 30seconds, where-as global growl messages live as long as the JVM. But even then,
+is the lifecycle correct or would it be determined by end user requirements?
+
+
+Clustering setup:
+
+	The clustering setup...Singleton classes define clustered data structures and properties.

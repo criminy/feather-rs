@@ -1,0 +1,56 @@
+# Compositing #
+
+2012-01-31
+
+While trying to use this library to port
+an existing application, I figured out how 
+to get little-effort components.
+
+I defined a component, StaticView, which loads
+the given HTML and does nothing. Then, I realized,
+I could use StaticView, and pass it an optional subview. This
+subview would process the HTML tree after StaticView. The same
+technique can currently be seen in the Templating example.
+
+So a kind of full featured 'view' would be this:
+
+	return new MyTemplateRoot(new StaticView("/my-html",new MyCustomViewCode));
+
+
+This applies whatever custom view code in your Inner-most view to '/my-html',
+then wraps that in MyTemplateRoot.
+
+But soon I realized MyCustomViewCode is really a composition of many other views. So we can do something very neat:
+
+
+	return new MyTemplateRoot(new StaticView("/my-html",
+		CompositeView.build(
+			new MyCustomComponent(...),
+			new TableComponent("#elementId tr",pageContents,PerTableItemViewHandler),
+			new ListComponent("#elementId li",pageContents,PerListItemViewHandler),
+			new Paginator("#elementId",pageObject,PageLinkBuilder))));
+
+This is...excessive..in your controller so best practice is probably:
+
+class MyViews {
+	public static View indexView(...) {
+		return new MyTemplateRoot(...
+			CompositeView.build(
+				new MyResourceView(...),
+				
+	}
+}	
+
+class MyResourceView {
+
+
+}
+
+class MyResource {
+	@GET
+	public View page() { 
+		return MyViews.indexView(...);
+	}
+}	
+
+Now we have a central-configured, no XML, view templating.

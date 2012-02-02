@@ -9,6 +9,7 @@ feather-rs. Examples include:
 	auth 		- provides authentication functionality.
 	log 		- provides logging functionality for the core feather-rs system and module authors.  
 	wizard 		- provides wizard API and functionality.
+	persistence	- provides persistence API and functionality.
 	attr-expr 	- allows template authors to use expressions within their HTML attributes and values.
 	event		- sync and async eventing api
 		camel	- camel implementation of eventing api
