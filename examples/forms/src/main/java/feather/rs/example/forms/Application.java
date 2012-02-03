@@ -9,6 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 
 import feather.rs.View;
 import feather.rs.forms.Form;
+import feather.rs.forms.FormRenderer;
 import feather.rs.html.Html;
 
 /**
@@ -104,6 +105,19 @@ class PublicPageView implements View
 		html.load(Application.class.getResourceAsStream("public.html"));
 
 		//renders the form
-		html.form("#registrationForm p",formObject);			
+		html.form("#registrationForm p",formObject, new RegistrationFormRenderer());		
+	}
+}
+
+
+class RegistrationFormRenderer extends FormRenderer<RegistrationForm>
+{
+	@Override
+	public void run() {
+		text("username","Username:");
+		password("password","Password:");
+		password("password2","Repeat Password:");
+		text("firstName","First Name:");
+		text("lastName","Last Name:");
 	}
 }

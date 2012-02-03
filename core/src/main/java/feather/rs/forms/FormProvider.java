@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
@@ -28,6 +29,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.apache.commons.io.IOUtils;
 
+import feather.rs.conversion.ConverterFactory;
 import feather.rs.log.Log;
 import feather.rs.log.LogFactory;
 
@@ -40,6 +42,8 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 	@Context HttpServletRequest request;
 	@Context ContextResolver<ValidatorFactory> validatorContextResolver;
 	
+	@Inject ConverterFactory converterFactory;
+	
 	@Override
 	public boolean isReadable(Class<?> type, Type genericType,
 			Annotation[] annotations, MediaType mediaType) {
@@ -50,9 +54,6 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 			return false;
 		}
 	}
-
-	
-	
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -87,7 +88,7 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 			
 			for(Entry<String, String> e : fields.entrySet())
 			{
-				Method getter = o.getClass().getMethod("get" + e.getKey());
+				Method getter = o.getClass().getMethod("get" + e.getKey() );
 				Object val = null;
 				
 				//TODO: convert string type to valid type
@@ -95,12 +96,15 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 				
 				if(getter.getReturnType().equals(Boolean.class) ||  getter.getReturnType().toString().equals("boolean"))
 				{				
-					//always use trye for 'checkboxes' since the existence of it 
+					//always use true for 'checkboxes' since the existence of it 
 					// in the form POST is what 'checked' means.
 					val = true;
 				}else if(getter.getReturnType().equals(String.class))
 				{
 					val = e.getValue();
+				}else{
+					//use converter.
+					val = converterFactory.convert(e.getValue(), getter.getReturnType());
 				}
 				
 				if(getter != null) {				
@@ -129,10 +133,11 @@ public class FormProvider<T> implements MessageBodyReader<Form<T>>{
 	    Map<String, String> map = new HashMap<String, String>();
 	    for (int i = 0; i < pairs.length; i++) {
 	      String[] fields = pairs[i].split("=");
-	      String name = URLDecoder.decode(fields[0], "UTF-8");	      
+	      String name = URLDecoder.decode(fields[0], "UTF-8");
+	      name = name.substring(0,1).toUpperCase() + name.substring(1);
 	      if(fields.length > 1) {	    	  
 	    	  String value = URLDecoder.decode(fields[1], "UTF-8");
-	    	  map.put(name,value);	    	  
+	    	  map.put(name,value );	    	  
 	      }else{
 	    	  map.put(name,null);
 	      }	     

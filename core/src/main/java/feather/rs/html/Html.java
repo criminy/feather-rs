@@ -17,6 +17,7 @@ import org.jsoup.select.Elements;
 import feather.rs.View;
 import feather.rs.forms.Form;
 import feather.rs.forms.FormBuilder;
+import feather.rs.forms.FormRenderer;
 import feather.rs.html.components.HtmlList;
 import feather.rs.log.Log;
 import feather.rs.log.LogFactory;
@@ -75,9 +76,9 @@ public class Html {
 	 * @param cssSelector The CSS selector expression.
 	 * @param form THe {@link Form} object.
 	 */
-	public  <T>  void form(String cssSelector,Form<T> form)
+	public  <T>  void form(String cssSelector,Form<T> form,FormRenderer<T> renderer)
 	{
-		formBuilder.renderFormUsingP(this,cssSelector,form);
+		formBuilder.renderFormUsingP(this,cssSelector,form,renderer);
 	}
 	
 	/**
@@ -202,6 +203,10 @@ public class Html {
 		Html newHtml = new Html();
 		newHtml.setFormBuilder(formBuilder);
 		view.render(newHtml);
+
+		//copy over sub templates to existing html object.
+		templates.putAll(newHtml.templates);
+
 		Elements ex = document.select(cssSelector);
 	
 		for (Element e : ex) {

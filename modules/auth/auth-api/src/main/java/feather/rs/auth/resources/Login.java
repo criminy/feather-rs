@@ -15,6 +15,7 @@ import feather.rs.auth.AuthenticationException;
 import feather.rs.auth.LoginService;
 import feather.rs.html.Html;
 import feather.rs.forms.Form;
+import feather.rs.forms.FormRenderer;
 
 /**
  * An abstract class which represents a Login page.
@@ -142,7 +143,7 @@ class LoginView implements View
 		html.load(Login.class.getResourceAsStream("login.html"));
 		
 		html.getDocument().select("#loginForm").attr("action",actionUrl);			
-		html.form("#loginForm p",formObject);
+		html.form("#loginForm p",formObject,new LoginFormRenderer());
 		
 		if(msg != null)
 		{
@@ -150,4 +151,14 @@ class LoginView implements View
 		}
 	}
 	
+}
+
+class LoginFormRenderer extends FormRenderer<LoginForm>
+{
+	@Override
+	public void run() {
+		text("username","Username: ");
+		password("password","Password: ");
+		checkbox("rememberMe","Remember Me :" );		
+	}
 }
