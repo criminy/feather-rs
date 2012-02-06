@@ -1,0 +1,65 @@
+# Form Binding #
+
+The current form binding and generation code is just not kosher for me. I'll go through how 
+it /is/ done and possibly how we can improve this.
+
+Now, you can use raw form HTML. this is fine UNTIL you need to generate
+form validation errors, then you have to use the validation API to manually
+populate the form content AND the error messages.
+
+The other method is to use a FormRenderer:
+
+
+	class MyFormRenderer extends FormRenderer<T>
+	{
+		public void render() {
+			text("fieldName","Long Field Name");
+		}
+	}
+
+
+This seems to work great, except that it requires more API additions to create custom field rendering. This is not what I want.
+
+	class FormConfiguration extends FormConfig {
+
+		public void additionalProcessing(Element formParent, Form<T> form) {
+
+		}
+
+		public Element findField(Element formParent, String fieldName) {
+			return formParent.select(fieldName);
+		}
+
+		public void populateErrorFromField(Element formParent String fieldName,String errorString) {
+			formParent.select("#" + fieldName + "_p .error").text(errorString);
+		}
+
+	}
+
+
+	class MyView implements View {
+
+		Form<T> formObject;
+
+		public void render(Html html) {
+			html.form("#formId",FormConfiguration.class,formObject );
+		}
+	}
+
+
+With this method, we can design our form manually:
+
+	<form id="formId">
+		<p id="fieldName_p">
+			<label for="fieldName">FieldName: </label><input type="text" value="" id="fieldName"/><span class="error"></span>
+		</p>
+	</form>
+
+Since the error can be found using the css selector "#${fieldName}_p .error" or #${fieldName}.nextSibling, 
+we build a FormConfiguration that finds and populates errors using these expressions. 
+Since a single application could use the same naming schema for all the forms, a single FormConfig object
+can be build for every form element in the application. We can find the actual form content using "#{fieldName}" and
+use helper functions within FormConfig to push data into the DOM. (checkbox("fieldName",value);)
+
+Still not 100% sure how to do I18N. Possibly just allow the developers to facilitate that by using multiple templates
+or building custom DOM processing code that works in tandem with the form populating code.
