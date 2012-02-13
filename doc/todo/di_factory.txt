@@ -1,0 +1,21 @@
+
+
+@Named
+class MyFactory implements feather.rs.di.factory<MyClass>
+{
+
+	@Inject FactoryContext ctx;
+
+	public void build(String name,Class<MyClass> clazz) { 
+		return ctx.bean(name,clazz).arg(1).arg(2).build();
+	}
+
+}
+
+FactoryContext is a class that will be implemented by Spring or Weld or Guice.
+
+the factoryContext API could have a fluent builder?
+
+@Inject
+@Named("whatever")
+MyClass myClass;

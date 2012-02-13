@@ -1,0 +1,7 @@
+
+
+* build a @Named TemplateFactory that is compatible with the way feather-rs
+  handles file loading. Put this in the feather-rs cambridge module. Update README.txt or that project.
+* build cambridge-helloworld example.
+* build an API agnostic Factory class for being able to use the API defined in ./di_factory.txt
+	* each supported DI container needs an implementation of the factory class.
