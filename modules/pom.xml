@@ -19,5 +19,6 @@
 		<module>wizard</module>
 		<module>growl</module>
 		<module>persistence</module>
+		<module>cambridge</module>
 	</modules>
 </project>

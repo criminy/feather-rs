@@ -6,6 +6,8 @@ Roadmap for releases
 
 	* Extended form rendering support.
 	* Pagination support.
+	* re-do templating system to use namespace:attributes. (use fork of cambridge-jaxrs module for this)
+	* (POSSIBLE) modularize template system.
 
 ## 0.3-RELEASE ##
 
@@ -20,3 +22,5 @@ Roadmap for releases
 		* Ajax support.
 	* Security annotation support (@Secured, maybe javax.annotation.security support) .
 	* More example applications.
+	* Split out validation, etc as individual modules.
+

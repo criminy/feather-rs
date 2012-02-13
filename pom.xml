@@ -17,6 +17,7 @@
 		<module>core</module>
 		<module>modules</module>	
 		<module>examples</module>		
+		<module>external/cambridge-local</module>
 	</modules>
 
 	<developers>

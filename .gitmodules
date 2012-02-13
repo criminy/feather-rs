@@ -1,0 +1,3 @@
+[submodule "external/cambridge"]
+	path = external/cambridge
+	url = https://github.com/criminy/Cambridge.git
